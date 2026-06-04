@@ -1,0 +1,17 @@
+{
+	"name": "com.timbojimbo.core",
+	"displayName": "Core",
+	"version": "0.1.0",
+	"unity": "6000.0",
+	"unityRelease": "0f1",
+	"description": "Shared core utilities for TimboJimbo packages.",
+	"dependencies": {},
+	"author": {
+		"name": "Timbo Jimbo",
+		"url": "https://timbojimbo.com",
+		"email": "hello@timbojimbo.com"
+	},
+	"changelogUrl": "https://github.com/Timbo-Jimbo/Core/blob/main/CHANGELOG.md",
+	"documentationUrl": "https://github.com/Timbo-Jimbo/Core#readme",
+	"licensesUrl": "https://github.com/Timbo-Jimbo/Core/blob/main/LICENSE"
+}
