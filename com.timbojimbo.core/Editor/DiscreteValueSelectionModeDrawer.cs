@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TimboJimbo.Core;
 using UnityEditor;
 using UnityEngine;
@@ -7,17 +8,25 @@ namespace TimboJimboEditor.Core
     [CustomPropertyDrawer(typeof(DiscreteValueSelectionMode))]
     internal sealed class DiscreteValueSelectionModeDrawer : PropertyDrawer
     {
+        private static Dictionary<(Object target, string propertyPath), DiscreteValueSelectionMode> _pendingChanges = new();
+
         public override void OnGUI(Rect rect, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(rect, label, property);
 
             var buttonRect = EditorGUI.PrefixLabel(rect, label);
             var currentValue = (DiscreteValueSelectionMode)property.enumValueIndex;
+            var targetKey = (property.serializedObject.targetObject, property.propertyPath);
             CoreEditorGUI.DiscreteValueSelectionModePopup(buttonRect, currentValue, newValue =>
             {
-                property.enumValueIndex = (int)newValue;
-                property.serializedObject.ApplyModifiedProperties();
+                _pendingChanges[targetKey] = newValue;
             });
+    
+            if (_pendingChanges.TryGetValue(targetKey, out var pendingValue))
+            {
+                property.enumValueIndex = (int)pendingValue;
+                _pendingChanges.Remove(targetKey);
+            }
 
             EditorGUI.EndProperty();
         }
