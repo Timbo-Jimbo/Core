@@ -110,14 +110,18 @@ namespace TimboJimbo.Core.Utility
             return OkLChToRGB(l, c, h, withAlpha: Mathf.LerpUnclamped(from.a, to.a, t));
         }
 
-        private static Color EnsureLinear(Color c) 
+        // A Unity Color always stores nominal sRGB component values, whatever the project's colour space,
+        // so OkLab/OkLCh interpolation always converts sRGB -> linear light before the perceptual maths and
+        // back again afterwards. Interpolating the raw sRGB numbers as if they were linear (the previous
+        // behaviour) muddied and darkened the midtones.
+        private static Color ToLinear(Color c)
         {
-            return QualitySettings.activeColorSpace == ColorSpace.Linear ? c : c.linear;
+            return c.linear;
         }
 
-        private static Color LinearToProjectSpecific(Color c)
+        private static Color FromLinear(Color c)
         {
-            return QualitySettings.activeColorSpace == ColorSpace.Linear ? c : c.gamma;
+            return c.gamma;
         }
 
         private static Vector3 LinearToLMS(Vector3 linear)
@@ -162,7 +166,7 @@ namespace TimboJimbo.Core.Utility
 
         private static Vector3 ColorToOkLab(Color c)
         {
-            Color linear = EnsureLinear(c);
+            Color linear = ToLinear(c);
             return LMSToOkLab(LinearToLMS(new Vector3(linear.r, linear.g, linear.b)));
         }
 
@@ -170,7 +174,7 @@ namespace TimboJimbo.Core.Utility
         {
             Vector3 linear = LMSToLinear(OkLabToLMS(lab));
             Color linearColor = new Color(linear.x, linear.y, linear.z, alpha);
-            return LinearToProjectSpecific(linearColor);
+            return FromLinear(linearColor);
         }
 
         private static Vector3 OkLabToOkLCh(Vector3 lab)
