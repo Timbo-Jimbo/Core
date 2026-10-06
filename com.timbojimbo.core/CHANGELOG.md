@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+### Added
+
+- `ColorExtra.Lerp(mode, from, to, t)` and `ColorExtra.LerpUnclamped(mode, from, to, t)`: interpolation through a `ColorInterpolationMode`'s colour space, the one switch every gradient preview and transition can share
+
+### Changed
+
+- The ease, colour interpolation and discrete value selection pickers share one popup shell and one property drawer (`PickerPopup<T>`, `PickerDrawer<T>`), so they look and behave alike; using them is unchanged
+- `EaseUtility` works out whole powers by multiplication rather than `Mathf.Pow`; every ease returns what it did
+
 ## [0.6.0] - 18/09/2026
 
 ### Added

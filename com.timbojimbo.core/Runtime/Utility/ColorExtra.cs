@@ -2,8 +2,20 @@ using UnityEngine;
 
 namespace TimboJimbo.Core.Utility
 {
-    public static class ColorExtra 
+    public static class ColorExtra
     {
+        /// <summary>Interpolates from <paramref name="from"/> to <paramref name="to"/> through <paramref name="mode"/>'s colour space, <paramref name="t"/> clamped to 0..1.</summary>
+        public static Color Lerp(ColorInterpolationMode mode, Color from, Color to, float t) => LerpUnclamped(mode, from, to, Mathf.Clamp01(t));
+
+        /// <summary>Interpolates from <paramref name="from"/> to <paramref name="to"/> through <paramref name="mode"/>'s colour space, <paramref name="t"/> unclamped.</summary>
+        public static Color LerpUnclamped(ColorInterpolationMode mode, Color from, Color to, float t) => mode switch
+        {
+            ColorInterpolationMode.HSV => LerpUnclampedHSV(from, to, t),
+            ColorInterpolationMode.OkLab => LerpUnclampedOkLab(from, to, t),
+            ColorInterpolationMode.OkLCh => LerpUnclampedOkLCh(from, to, t),
+            _ => Color.LerpUnclamped(from, to, t),
+        };
+
         public static void RGBToOkLab(Color color, out float l, out float a, out float b)
         {
             Vector3 lab = ColorToOkLab(color);
